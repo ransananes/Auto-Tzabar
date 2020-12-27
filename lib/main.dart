@@ -33,7 +33,6 @@ Future<void> sendAPIS() async{
   sp.reload();
   failed = sp.getBool("failed");
 
- print("fuck you mtf $token");
  if(token != null && failed == true)
  {
     var headers = {
