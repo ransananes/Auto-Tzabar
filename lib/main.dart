@@ -16,13 +16,22 @@ import 'package:background_fetch/background_fetch.dart';
 String token = "";
 
 void backgroundFetchHeadlessTask(String taskId) async {
- setnow();
+ sendAPIS();
   BackgroundFetch.finish(taskId);
 }
 
 Future<void> sendAPIS() async{
   NotificationHelper().showNotificationActivated();
-  SharedPreferences sp = await SharedPreferences.getInstance();
+     SharedPreferences sp = await SharedPreferences.getInstance();
+ now =int.parse( DateFormat.H().format(new DateTime.now()));
+    
+    if(now >= 0 && now < 5)
+    {
+      failed = true;
+     sp.setBool("failed", true); 
+    }
+    else if((now >= 5) && (now < 10))
+    {    
   if(!sp.containsKey("token"))
   print("error on earth!");
   if(!sp.containsKey("sick"))
@@ -55,11 +64,11 @@ Future<void> sendAPIS() async{
   print(constants.isSick);
 if(constants.isSick)
 {
-   payload = {"isSymptom":true,"isProximity":false};
+   payload = {"isSymptom":true,"isProximity":false,"potentialAnswers":{"isFever":false,"isAllergy":false,"isFluVaccine":false}};
 }
 else
 {
-   payload = {"isSymptom":false,"isProximity":false};
+   payload = {"isSymptom":false,"isProximity":false,"potentialAnswers":{"isFever":false,"isAllergy":false,"isFluVaccine":false}};
 }
   var res = 
   await http.post('https://clearance.medical.idf.il/api/report/addReport/', headers: headers, body: jsonEncode(payload));
@@ -76,25 +85,9 @@ else
   print(res.body);
 
  }
-  
+    }
 }
-/*curl "https://clearance.medical.idf.il/api/report/addReport" ^
-  -H "authority: clearance.medical.idf.il" ^
-  -H "authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjVPZjlQNUY5Z0NDd0NtRjJCT0hIeEREUS1EayJ9.eyJhdWQiOiI4YTM1MzZlNy1iNGQ5LTQ5MmUtYjhjNy0xZjM5MjIxNDIwMDciLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vNzg4MjA4NTItNTVmYS00NTBiLTkwOGQtNDVjMGQ5MTFlNzZiL3YyLjAiLCJpYXQiOjE2MDg3NTMwMTYsIm5iZiI6MTYwODc1MzAxNiwiZXhwIjoxNjA4NzU2OTE2LCJhaW8iOiJBVlFBcS84U0FBQUFYSnNUMWV5RmhxRGxNK2NWOFNKNHJRQTA2MG1MdC91OTE2Y0V1S29tMHhJTEcraWtUbjZvVlNhblFkRUgycW5SYnk1aXdIQWpXWXBuaHlmYy9OR25GblBWMFV5Wk53NmFicDZ3b1VYbXhrbz0iLCJuYW1lIjoi16jXnyDXodeg16DXoSIsIm5vbmNlIjoiY2M1MzVmMjItYTU4Mi00OGU4LWE0YmEtMjNhNTg5OGNjZTA2Iiwib2lkIjoiMmE4YTU1NTItZTE1Yi00Y2NiLWIyNjctYTIxOWM1ZWYxOGFkIiwicHJlZmVycmVkX3VzZXJuYW1lIjoiMzIyODcxMzc3QGlkZi5pbCIsInJoIjoiMC5BVFVBVWdpQ2VQcFZDMFdRalVYQTJSSG5hLWMyTllyWnRDNUp1TWNmT1NJVUlBYzFBTDguIiwic3ViIjoidnppd3JYb1lYazBlUWJjZmhaOTlFVzdPWmwzRnBPU1ZVTjZfNDExTXJvdyIsInRpZCI6Ijc4ODIwODUyLTU1ZmEtNDUwYi05MDhkLTQ1YzBkOTExZTc2YiIsInV0aSI6IkV2NmF5VVZhdzBhX1ZSbGNybVZzQVEiLCJ2ZXIiOiIyLjAifQ.HBZu4Z5cXrKj2iA9N0DSjqimzat6vowa_QgIApnwxqcki0iN1YOTfaiCddCWJXdT2rjE9UFMrsQVM8a0jE_y4zodM5j2UC8lIV9_vAKlK2x84RoxzZy33f0exexwYgt14GhfkTj0m5pG9Ey-jNgj-ec5g_DNi4aywaLXBGHJbZEteq6YfMce5lJvrbE_TwV9VmDq6wdIfJle1Cf7mjda8cGpdHcB3bGNZ-LbpEwvSakXEQ7utUBJz4guBavJM8uTry7H2vcbQMqfGvnbYC776VtZqND3XBT9W0h6MVf4rNZI9_fIPbTVf6sqbreVLZ7N97E1_gdBGqZaKPlWMod_AQ" ^
-  -H "request-id: ^|52fdddfe630d456f85372f2d9828a9c1.db12b7fbf61b4f99" ^
-  -H "content-type: application/json" ^
-  -H "user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Mobile Safari/537.36 Edg/87.0.664.66" ^
-  -H "request-context: appId=cid-v1:b9e90afe-0c1a-4308-945f-977d51c5dd8d" ^
-  -H "accept: *" ^
-  -H "origin: https://clearance.medical.idf.il" ^
-  -H "sec-fetch-site: same-origin" ^
-  -H "sec-fetch-mode: cors" ^
-  -H "sec-fetch-dest: empty" ^
-  -H "referer: https://clearance.medical.idf.il/Questionnaire" ^
-  -H "accept-language: en-US,en;q=0.9" ^
-  -H "cookie: visid_incap_2430802=KaORQYPAQlmMH3eO42PexigKzF8AAAAAQUIPAAAAAAC7uhlme0TN8IILjlNCiQN5; ai_user=p1PDqy2fVzutvlF5fIrrJS^|2020-12-10T18:39:29.603Z; nlbi_2430802=t+YfFSmBlwXCfbS2x19azwAAAAA6eCITvJO2y1dK70bp94+6; incap_ses_820_2430802=pCxPFXlgPQ69jfum7TlhC5mg418AAAAAGnor7AnSfGlZ04BdbQE09A==; ai_session=+P9tNyDY7zytPmw4/4VpX9^|1608753306525^|1608753443368" ^
-  --data-binary "^{^\^"isSymptom^\^":false,^\^"isProximity^\^":false^}" ^
-  --compressed */
+
 @override
 void initState() {
   initState();  
@@ -106,7 +99,7 @@ void dispose() {
 }
 int now = 0;
 bool failed = true;
-void setnow () async
+/*void setnow () async
 {
     SharedPreferences sp = await SharedPreferences.getInstance();
  now =int.parse( DateFormat.H().format(new DateTime.now()));
@@ -119,19 +112,16 @@ void setnow () async
       failed = true;
      sp.setBool("failed", true); 
     }
-}
+}*/
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); 
- //   await AndroidAlarmManager.initialize();   
    SharedPreferences sp_log = await SharedPreferences.getInstance();
-    print("ran is great");
   // sendAPIS(); 
 NotificationHelper().initializedNotification();
   runApp(MaterialApp(
     home: homepage(),
   )); 
     BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
- //  await AndroidAlarmManager.periodic(const Duration(minutes: 14), 0, setnow,wakeup: true,exact: true,rescheduleOnReboot: true); 
 }
  class homepage extends StatefulWidget {
   @override
@@ -164,7 +154,7 @@ class _homepageState extends State<homepage> {
       print("[BackgroundFetch] Event received $taskId");
         switch (taskId) {
     default:
-          setnow();
+          sendAPIS();
 
  }
       BackgroundFetch.finish(taskId);
