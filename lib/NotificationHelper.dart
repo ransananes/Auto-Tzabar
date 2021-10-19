@@ -51,21 +51,20 @@ class NotificationHelper {
   
 
   
-      print('play notification');
       await flutterLocalNotificationsPlugin.show(0,  'הצב"ר אוטומטית',
           "הדיווח נשלח בהצלחה", notificationDetails);
     
   }
-Future<void> showNotificationActivated() async {
+Future<void> showNotificationActivated(String token,bool failed) async {
  
 
    
 
     AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
-      'channel_Id',
-      'Channel Name',
-      'Channel Description',
+      '0',
+      'דיווח',
+      'דיווח הושלם',
       importance: Importance.max,
       priority: Priority.high,
       enableVibration: true,
@@ -81,9 +80,8 @@ Future<void> showNotificationActivated() async {
   
 
   
-      print('play notification');
       await flutterLocalNotificationsPlugin.show(0,  'הצב"ר אוטומטית',
-          "הדיווח בבדיקה", notificationDetails);
+          "הדיווח בבדיקה" + token + failed.toString(), notificationDetails);
     
   }
 }
